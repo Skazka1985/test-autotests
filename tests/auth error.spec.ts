@@ -1,47 +1,26 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/login-page';
+import { USERNAMES, CREDENTIALS, ERROR_MESSAGES } from '../test-data'; // Импортируем ERROR_MESSAGES
 
 test.describe('Неуспешная авторизация', () => {
+    let loginPage: LoginPage;
+
     test.beforeEach(async ({ page }) => {
-        await page.goto('https://www.saucedemo.com/');
+        loginPage = new LoginPage(page);
+        await loginPage.navigate('https://www.saucedemo.com/');
     });
-    test('Авторизация пользователя locked_out_user', async ({ page }) => {
-        // Данные пользователя
-        const blockedUser = {
-            username: "locked_out_user",
-            password: "secret_sauce"
-        };
 
-        // Авторизация
-        await page.getByRole('textbox', { name: 'Username' }).fill(blockedUser.username);
-        await page.getByRole('textbox', { name: 'Password' }).fill(blockedUser.password);
-        await page.getByRole('button', { name: 'Login' }).click();
+    test('Авторизация заблокированного пользователя', async () => {
+        // Используем константы из test-data
+        await loginPage.login(USERNAMES.LOCKED_USER, CREDENTIALS.PASSWORD);
+        
+        // Используем сообщение об ошибке из test-data
+        await loginPage.verifyError(ERROR_MESSAGES.LOCKED_OUT);
+    });
 
-        // Проверка
-        const error = page.locator('[data-test="error"]');
-        await expect(error).toBeVisible();
-        await expect(error).toHaveText('Epic sadface: Sorry, this user has been locked out.');
+    // Пример дополнительного теста для пустого логина
+    test('Авторизация без логина', async () => {
+        await loginPage.login('', CREDENTIALS.PASSWORD);
+        await loginPage.verifyError(ERROR_MESSAGES.USERNAME_REQUIRED);
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
