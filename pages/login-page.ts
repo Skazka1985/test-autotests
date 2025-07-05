@@ -34,3 +34,4 @@ export class LoginPage extends BasePage {
         await expect(this.errorMessage).toHaveCSS('background-color', 'rgba(226, 35, 26, 0.1)');
     }
 }
+

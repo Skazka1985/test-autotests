@@ -31,3 +31,5 @@ export class InventoryPage extends BasePage {
         return Date.now() - startTime;
     }
 }
+
+
