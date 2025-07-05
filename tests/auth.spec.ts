@@ -54,7 +54,7 @@ test.describe('Неуспешная авторизация', () => {
 
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
-        await loginPage.navigate('https://www.saucedemo.com/');
+        await loginPage.navigate(URLS.LOGIN);
     });
 
     test('Авторизация заблокированного пользователя', async () => {
@@ -71,3 +71,5 @@ test.describe('Неуспешная авторизация', () => {
         await loginPage.verifyError(ERROR_MESSAGES.USERNAME_REQUIRED);
     });
 });
+
+

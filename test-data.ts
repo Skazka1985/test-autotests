@@ -23,3 +23,4 @@ export const ERROR_MESSAGES = {
     PASSWORD_REQUIRED: 'Epic sadface: Password is required',
     INVALID_CREDENTIALS: 'Epic sadface: Username and password do not match'
 };
+
