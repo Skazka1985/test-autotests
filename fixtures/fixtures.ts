@@ -1,40 +1,48 @@
-// tests/fixtures.ts
 import { test as base } from '@playwright/test';
 import { LoginPage } from '../pages/login-page';
 import { InventoryPage } from '../pages/inventory-page';
-import { CREDENTIALS, USERNAMES, URLS, ERROR_MESSAGES } from '../test-data';
+import { InventoryItemPage } from '../pages/inventory-item-page';
+import { CartPage } from '../pages/cart-page';
+import { CREDENTIALS, USERNAMES, URLS } from '../test-data';
 
-// Определяем типы для наших фикстур
 interface AuthFixtures {
   loginPage: LoginPage;
   inventoryPage: InventoryPage;
-  authPage: { loginPage: LoginPage; inventoryPage: InventoryPage };
+  inventoryItemPage: InventoryItemPage;
+  cartPage: CartPage;
+  authPage: {
+    loginPage: LoginPage;
+    inventoryPage: InventoryPage; // Добавляем inventoryPage сюда
+  };
 }
 
-// Расширяем базовые фикстуры Playwright
 export const test = base.extend<AuthFixtures>({
-  // Базовая фикстура для страницы логина
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate(URLS.LOGIN);
     await use(loginPage);
   },
 
-  // Фикстура для страницы инвентаря
   inventoryPage: async ({ page }, use) => {
-    const inventoryPage = new InventoryPage(page);
-    await use(inventoryPage);
+    await use(new InventoryPage(page));
   },
 
-  // Комплексная фикстура с предварительной авторизацией
+  inventoryItemPage: async ({ page }, use) => {
+    await use(new InventoryItemPage(page));
+  },
+
+  cartPage: async ({ page }, use) => {
+    await use(new CartPage(page));
+  },
+
   authPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
-    const inventoryPage = new InventoryPage(page);
+    const inventoryPage = new InventoryPage(page); // Создаем inventoryPage
     
     await loginPage.navigate(URLS.LOGIN);
     await loginPage.login(USERNAMES.STANDARD_USER, CREDENTIALS.PASSWORD);
     
-    await use({ loginPage, inventoryPage });
+    await use({ loginPage, inventoryPage }); // Передаем оба объекта
   }
 });
 

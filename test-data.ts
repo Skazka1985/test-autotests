@@ -11,16 +11,16 @@ export const USERNAMES = {
     VISUAL_USER: "visual_user"
 };
 
+// Объединённый объект URLS
 export const URLS = {
     LOGIN: "https://www.saucedemo.com/",
-    INVENTORY: "https://www.saucedemo.com/inventory.html"
+    INVENTORY: "https://www.saucedemo.com/inventory.html",
+    CART: "https://www.saucedemo.com/cart.html" // Добавлен новый URL
 };
 
-// Добавляем сообщения об ошибках
 export const ERROR_MESSAGES = {
     LOCKED_OUT: 'Epic sadface: Sorry, this user has been locked out.',
     USERNAME_REQUIRED: 'Epic sadface: Username is required',
     PASSWORD_REQUIRED: 'Epic sadface: Password is required',
     INVALID_CREDENTIALS: 'Epic sadface: Username and password do not match'
 };
-
