@@ -1,13 +1,9 @@
-import { test, expect } from '../fixtures/fixtures'; // Добавляем expect в импорт
+import { test, expect } from '../fixtures/fixtures';
 import { USERNAMES, CREDENTIALS } from '../test-data';
-import { URLS } from '../test-data';
 
 test.describe('Тесты корзины', () => {
-  test.beforeEach(async ({ authPage }) => {
-    await authPage.inventoryPage.verifyInventoryPageIsOpened();
-  });
-
-  test('Добавление и удаление товара', async ({ inventoryPage, cartPage }) => {
+  test('Добавление и удаление товара', async ({ authenticatedState }) => {
+    const { inventoryPage, cartPage } = authenticatedState;
     const ITEM_INDEX = 2;
     const itemName = await inventoryPage.getItemName(ITEM_INDEX);
     
@@ -25,7 +21,8 @@ test.describe('Тесты корзины', () => {
     await inventoryPage.verifyCartBadgeNotVisible();
   });
 
-  test('Добавление нескольких товаров', async ({ inventoryPage, cartPage }) => {
+  test('Добавление нескольких товаров', async ({ authenticatedState }) => {
+    const { inventoryPage, cartPage } = authenticatedState;
     const ITEMS = [0, 2, 4];
     
     for (const index of ITEMS) {
@@ -37,7 +34,8 @@ test.describe('Тесты корзины', () => {
     await cartPage.expectItemsCount(ITEMS.length);
   });
 
-  test('Случайный товар', async ({ inventoryPage, cartPage }) => {
+  test('Случайный товар', async ({ authenticatedState }) => {
+    const { inventoryPage, cartPage } = authenticatedState;
     const index = await inventoryPage.getRandomItemIndex();
     const itemName = await inventoryPage.getItemName(index);
     

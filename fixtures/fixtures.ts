@@ -5,18 +5,19 @@ import { InventoryItemPage } from '../pages/inventory-item-page';
 import { CartPage } from '../pages/cart-page';
 import { CREDENTIALS, USERNAMES, URLS } from '../test-data';
 
-interface AuthFixtures {
+interface AppFixtures {
   loginPage: LoginPage;
   inventoryPage: InventoryPage;
   inventoryItemPage: InventoryItemPage;
   cartPage: CartPage;
-  authPage: {
+  authenticatedState: { // Переименовываем authPage → authenticatedState
     loginPage: LoginPage;
-    inventoryPage: InventoryPage; // Добавляем inventoryPage сюда
+    inventoryPage: InventoryPage;
+    cartPage: CartPage; // Добавляем cartPage
   };
 }
 
-export const test = base.extend<AuthFixtures>({
+export const test = base.extend<AppFixtures>({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate(URLS.LOGIN);
@@ -35,14 +36,17 @@ export const test = base.extend<AuthFixtures>({
     await use(new CartPage(page));
   },
 
-  authPage: async ({ page }, use) => {
+  // Переименовываем authPage → authenticatedState и добавляем cartPage
+  authenticatedState: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
-    const inventoryPage = new InventoryPage(page); // Создаем inventoryPage
+    const inventoryPage = new InventoryPage(page);
+    const cartPage = new CartPage(page); // Добавляем
     
     await loginPage.navigate(URLS.LOGIN);
     await loginPage.login(USERNAMES.STANDARD_USER, CREDENTIALS.PASSWORD);
+    await inventoryPage.verifyInventoryPageIsOpened();
     
-    await use({ loginPage, inventoryPage }); // Передаем оба объекта
+    await use({ loginPage, inventoryPage, cartPage }); // Теперь передаем все три страницы
   }
 });
 
